@@ -3,11 +3,11 @@
 
 ## Overview
 
-This project is a demonstration of a **client-server system** that performs web scraping of cryptocurrency news headlines. The system is designed to:
+This project demonstrates a **client-server system** that performs web scraping of cryptocurrency news headlines. The system is designed to:
 
 1. Use a **web scraper** to fetch the latest cryptocurrency news headlines from the [Cointelegraph website](https://cointelegraph.com/).
 2. Handle multiple clients simultaneously using an efficient **Selector paradigm** for connection management.
-3. Allow clients to request a specific number of news headlines via a simple JSON request.
+3. Allow clients to dynamically request a specific number of news headlines via the command line.
 
 ---
 
@@ -21,8 +21,8 @@ This project is a demonstration of a **client-server system** that performs web 
    - Efficiently manages multiple client connections without creating a separate thread for each client.
    - Processes requests and returns results dynamically.
 
-3. **Ease of Use**:
-   - Clients can specify the number of headlines they want, making it customizable.
+3. **Dynamic Client Interaction**:
+   - Clients can specify the number of headlines to fetch during runtime, making the application flexible and user-friendly.
 
 ---
 
@@ -33,6 +33,7 @@ This project is a demonstration of a **client-server system** that performs web 
 |     Client (User)        |
 |  - Sends JSON Request    |
 |  - Specifies # Headlines |
+|  - Dynamic Interaction   |
 +--------------------------+
             |
             v
@@ -41,6 +42,7 @@ This project is a demonstration of a **client-server system** that performs web 
 |  - Handles Multiple      |
 |    Connections           |
 |  - Parses Requests       |
+|  - Calls Scraper         |
 |  - Returns JSON Response |
 +--------------------------+
             |
@@ -64,7 +66,7 @@ This project is a demonstration of a **client-server system** that performs web 
 ## Action Diagram: Step-by-Step Process
 
 ```text
-Client sends JSON request (e.g., {"num_headlines": 3})
+Client sends JSON request (e.g., {"num_headlines": 3}) via Command Line
                 |
                 v
 +----------------------------+
@@ -91,8 +93,7 @@ Client sends JSON request (e.g., {"num_headlines": 3})
 +----------------------------+
                 |
                 v
-Client receives and processes response
-(e.g., Displays headlines)
+Client receives and displays response (Headlines and Links)
 ```
 
 ---
@@ -112,9 +113,10 @@ Client receives and processes response
 ### Step 2: Download Project Files
 
 Download the following files and place them in the same folder:
-1. `mpr2025_KN_82119_Python_Windows.py` (Server Code)
-2. `requirements.txt` (Dependencies)
-3. `mpr2025_KN_82119_Python_Windows_documentation.md` (This Documentation)
+1. `mpr2025_KN_82119_Python_Windows_Server.py` (Server Code)
+2. `mpr2025_KN_82119_Python_Windows_Client.py` (Client Code)
+3. `requirements.txt` (Dependencies)
+4. `mpr2025_KN_82119_Python_Windows_documentation.md` (This Documentation)
 
 ### Step 3: Set Up a Virtual Environment
 
@@ -148,9 +150,9 @@ A virtual environment ensures that the project dependencies are isolated from th
 
 ### Step 5: Run the Server
 
-1. Start the server by running the Python script:
+1. Start the server by running the server script:
    ```bash
-   python mpr2025_KN_82119_Python_Windows.py
+   python mpr2025_KN_82119_Python_Windows_Server.py
    ```
 2. The server will start and listen for connections on `localhost:65432`.
 3. You should see output like this:
@@ -158,33 +160,16 @@ A virtual environment ensures that the project dependencies are isolated from th
    Listening on ('localhost', 65432)
    ```
 
-### Step 6: Test the Client
+### Step 6: Run the Client
 
-You can test the server using a custom client script or a tool like `curl`. Below is an example Python client script:
-
-```python
-import socket
-import json
-
-def request_crypto_headlines(num_headlines):
-    host = 'localhost'
-    port = 65432
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((host, port))
-        request = json.dumps({'num_headlines': num_headlines}).encode()
-        s.sendall(request)
-        data = s.recv(4096)
-    headlines = json.loads(data.decode())
-    return headlines
-
-if __name__ == "__main__":
-    num_headlines = 5  # Request 5 headlines
-    results = request_crypto_headlines(num_headlines)
-    for item in results:
-        print(f"Title: {item['title']}")
-        print(f"Link: {item['link']}")
-        print("-" * 40)
-```
+1. Open a new terminal or command prompt.
+2. Run the client script:
+   ```bash
+   python mpr2025_KN_82119_Python_Windows_Client.py
+   ```
+3. Follow the on-screen instructions:
+   - Enter the number of headlines you want to fetch.
+   - The requested headlines and links will be displayed.
 
 ---
 
@@ -200,4 +185,3 @@ if __name__ == "__main__":
    - The selector-based server design allows efficient handling of multiple client requests.
 
 ---
-
