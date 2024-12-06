@@ -7,7 +7,7 @@ This project demonstrates a **client-server system** that performs web scraping 
 
 1. Use a **web scraper** to fetch the latest cryptocurrency news headlines from the [Cointelegraph website](https://cointelegraph.com/).
 2. Handle multiple clients simultaneously using an efficient **Selector paradigm** for connection management.
-3. Allow clients to dynamically request a specific number of news headlines via the command line.
+3. Allow clients to interact dynamically with the server by requesting headlines and responding to server prompts.
 
 ---
 
@@ -19,10 +19,11 @@ This project demonstrates a **client-server system** that performs web scraping 
 
 2. **Selector-Based Server**:
    - Efficiently manages multiple client connections without creating a separate thread for each client.
-   - Processes requests and returns results dynamically.
+   - Processes requests dynamically based on client input.
 
-3. **Dynamic Client Interaction**:
-   - Clients can specify the number of headlines to fetch during runtime, making the application flexible and user-friendly.
+3. **Interactive Client**:
+   - Clients can specify the number of headlines they want in response to server prompts.
+   - Clients can request more headlines or exit the interaction.
 
 ---
 
@@ -31,9 +32,9 @@ This project demonstrates a **client-server system** that performs web scraping 
 ```text
 +--------------------------+
 |     Client (User)        |
-|  - Sends JSON Request    |
-|  - Specifies # Headlines |
-|  - Dynamic Interaction   |
+|  - Interacts Dynamically |
+|  - Responds to Prompts   |
+|  - Requests Headlines    |
 +--------------------------+
             |
             v
@@ -43,7 +44,7 @@ This project demonstrates a **client-server system** that performs web scraping 
 |    Connections           |
 |  - Parses Requests       |
 |  - Calls Scraper         |
-|  - Returns JSON Response |
+|  - Prompts Client        |
 +--------------------------+
             |
             v
@@ -63,17 +64,13 @@ This project demonstrates a **client-server system** that performs web scraping 
 
 ---
 
-## Action Diagram: Step-by-Step Process
+## Action Diagram: Interaction Flow
 
 ```text
-Client sends JSON request (e.g., {"num_headlines": 3}) via Command Line
+Server sends prompt to client: "How many headlines would you like?"
                 |
                 v
-+----------------------------+
-| Server receives the request|
-|  - Parses JSON             |
-|  - Extracts # headlines    |
-+----------------------------+
+Client responds with number (e.g., 3)
                 |
                 v
 +----------------------------+
@@ -86,14 +83,16 @@ Client sends JSON request (e.g., {"num_headlines": 3}) via Command Line
 +----------------------------+
                 |
                 v
-+----------------------------+
-| Server sends JSON response |
-|  - Contains requested      |
-|    headlines               |
-+----------------------------+
+Server sends headlines to client
                 |
                 v
-Client receives and displays response (Headlines and Links)
+Server prompts: "Would you like to see more? (Enter number or 'exit')"
+                |
+                v
+Client responds with number or "exit"
+                |
+                v
+Process repeats or connection ends.
 ```
 
 ---
@@ -168,8 +167,8 @@ A virtual environment ensures that the project dependencies are isolated from th
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
 3. Follow the on-screen instructions:
-   - Enter the number of headlines you want to fetch.
-   - The requested headlines and links will be displayed.
+   - Enter the number of headlines you want when prompted.
+   - Decide whether to request more or exit the interaction.
 
 ---
 
