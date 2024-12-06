@@ -42,7 +42,7 @@ def accept_wrapper(sock):
     conn, addr = sock.accept()
     print(f"Accepted connection from {addr}")
     conn.setblocking(False)
-    data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'')
+    data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'how many headlines would you like?')
     events = selectors.EVENT_READ | selectors.EVENT_WRITE
     sel.register(conn, events, data=data)
 
@@ -52,25 +52,28 @@ def service_connection(key, mask):
     if mask & selectors.EVENT_READ:
         recv_data = sock.recv(1024)
         if recv_data:
-            data.inb += recv_data
+            client_request = recv_data.decode().strip().lower()
+            if client_request == "exit":
+                print(f"Closing connection to {data.addr}")
+                sel.unregister(sock)
+                sock.close()
+            else:
+                try:
+                    num_headlines = int(client_request)
+                    headlines = fetch_crypto_headlines(num_headlines)
+                    response = "\n".join(
+                        [f"Title: {item['title']}, Link: {item['link']}" for item in headlines]
+                    )
+                    data.outb = response.encode() + b"\nWould you like to see more? (Enter a number or 'exit'): "
+                except ValueError:
+                    data.outb = b"Invalid input. Please enter a number or 'exit': "
         else:
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)
             sock.close()
-    if mask & selectors.EVENT_WRITE and data.inb:
-        request = data.inb.decode()
-        try:
-            request_data = json.loads(request)
-            num_headlines = int(request_data.get('num_headlines', 5))  # Default to 5 if not specified
-            headlines = fetch_crypto_headlines(num_headlines)
-            response = json.dumps(headlines).encode()
-        except Exception as e:
-            response = json.dumps({'error': str(e)}).encode()
-        data.outb += response
-        if data.outb:
-            sent = sock.send(data.outb)
-            data.outb = data.outb[sent:]
-            data.inb = b''
+    if mask & selectors.EVENT_WRITE and data.outb:
+        sent = sock.send(data.outb)
+        data.outb = data.outb[sent:]
 
 def start_server(host, port):
     lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
