@@ -158,12 +158,10 @@ A virtual environment ensures that the project dependencies are isolated from th
 
 
 ## Future Improvements
-1. **Error Handling**:
-   - Enhance error reporting for client misbehavior and scraping failures.
+1. **Caching**:
+   - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
 2. **Pagination**:
    - Extend the scraper to handle paginated results automatically.
 3. **Scalability**:
    - Upgrade to a process-based architecture for higher throughput.
-4. **Caching**:
-   - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
 ---
