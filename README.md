@@ -151,7 +151,10 @@ A virtual environment ensures that the project dependencies are isolated from th
    or alternatively, connect using `telnet`:
    ```bash
    telnet localhost 65432
-   ```
+   ```3. Follow the on-screen instructions:
+   - Enter the number of headlines you want when prompted.
+   - Decide whether to request more or exit the interaction.
+
 
 ## Future Improvements
 1. **Error Handling**:
