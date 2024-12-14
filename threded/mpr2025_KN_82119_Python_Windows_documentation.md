@@ -148,10 +148,10 @@ A virtual environment ensures that the project dependencies are isolated from th
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
-   or alternatively, connect using `telnet`:
-   ```bash
-   telnet localhost 65432
-   ```
+      or alternatively, connect using `telnet`:
+      ```bash
+      telnet localhost 65432
+      ```
 3. Follow the on-screen instructions:
    - Enter the number of headlines you want when prompted.
    - Decide whether to request more or exit the interaction.
