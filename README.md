@@ -1,186 +1,126 @@
 
-# mpr2025_KN_82119_Python_Windows Documentation
+# Project Documentation: Multithreaded Web Scraper and Server
 
 ## Overview
+This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
 
-This project demonstrates a **client-server system** that performs web scraping of cryptocurrency news headlines. The system is designed to:
+## Features
+1. **Web Scraping**:
+   - Scrapes product names and prices from the specified URL using Selenium.
+   - Extracts and sorts products by price in ascending order.
+   
+2. **Multithreaded Server**:
+   - Handles multiple client requests simultaneously using threads for blocking tasks.
+   - Uses the `selectors` module for efficient connection management.
 
-1. Use a **web scraper** to fetch the latest cryptocurrency news headlines from the [Cointelegraph website](https://cointelegraph.com/).
-2. Handle multiple clients simultaneously using an efficient **Selector paradigm** for connection management.
-3. Allow clients to interact dynamically with the server by requesting headlines and responding to server prompts.
+3. **Client Interaction**:
+   - Clients can request a specific number of products, and the server responds with the requested information.
+   - Clients can continue querying or exit the session.
 
----
+## Implementation Details
 
-## Key Features
+### **Web Scraping**
+The `fetch_dm_products` function uses Selenium to automate the scraping process. Key steps include:
+1. Navigating to the target URL.
+2. Waiting for the product list to load using `WebDriverWait`.
+3. Extracting product names and prices using CSS selectors.
+4. Cleaning and processing the extracted data.
+5. Sorting the products by price.
 
-1. **Web Scraper**:
-   - Dynamically fetches headlines and links from Cointelegraph's homepage.
-   - Extracts useful data and formats it in a readable JSON format.
+### **Selectors**
+- CSS selectors are used to locate HTML elements for product names and prices.
+- **Name Selector**: `#product-tiles div.pdd_14u321i8 div:nth-child(3) > a`
+  - Locates the anchor tags containing product names within the product tiles.
+- **Price Selector**: `div.pdd_14u321i8 > div:nth-child(2) > div > div > span > span`
+  - Extracts the price details from the corresponding product tile.
 
-2. **Selector-Based Server**:
-   - Efficiently manages multiple client connections without creating a separate thread for each client.
-   - Processes requests dynamically based on client input.
+### **Multithreading**
+- The server uses the `selectors` module for event-driven, non-blocking I/O.
+- When a blocking task like web scraping is needed, it is offloaded to a separate thread using `threading.Thread`.
+- **Why Multithreading?**
+  - Selenium operations are inherently blocking. Without multithreading, the server would handle only one client at a time.
+  - By delegating blocking tasks to threads, the server loop remains free to handle other client connections, improving responsiveness and scalability.
 
-3. **Interactive Client**:
-   - Clients can specify the number of headlines they want in response to server prompts.
-   - Clients can request more headlines or exit the interaction.
+### **Server Architecture**
+1. **Connection Management**:
+   - The `selectors` module monitors multiple sockets for readiness (read/write).
+   - The `accept_wrapper` function accepts new connections and registers them.
 
----
+2. **Client Handling**:
+   - Each client connection spawns a new thread for processing its requests.
+   - The `handle_client` function handles communication with individual clients.
 
-## TAM Diagram: System Flow
+3. **Non-Blocking Design**:
+   - The main server loop uses `selectors` to monitor sockets and delegate work efficiently.
 
-```text
-+--------------------------+
-|     Client (User)        |
-|  - Interacts Dynamically |
-|  - Responds to Prompts   |
-|  - Requests Headlines    |
-+--------------------------+
-            |
-            v
-+--------------------------+
-|       Server (API)       |
-|  - Handles Multiple      |
-|    Connections           |
-|  - Parses Requests       |
-|  - Calls Scraper         |
-|  - Prompts Client        |
-+--------------------------+
-            |
-            v
-+--------------------------+
-|      Web Scraper         |
-|  - Fetches Headlines     |
-|  - Parses HTML Content   |
-|  - Formats as JSON       |
-+--------------------------+
-            |
-            v
-+--------------------------+
-| Cointelegraph Website    |
-|  - Source of News Data   |
-+--------------------------+
+## Diagrams
+
+### **Architecture Diagram**
+```plaintext
++----------------------+
+|      Client 1        |
++----------------------+
+          |
++----------------------+
+|      Client 2        |
++----------------------+
+          |
++----------------------+
+|   Multithreaded      |
+|   Server             |
+|   (Main Loop +       |
+|   Selectors)         |
++----------------------+
+       |       |
+  +----+       +----+
+  |                 |
++------+       +------+
+| Thread|       | Thread|
+|  1    |       |  2    |
++------+       +------+
+   |                |
++------+        +------+
+|Scraping|      |Scraping|
+| Logic  |      | Logic  |
++------+        +------+
 ```
 
----
+### **Action Flow**
+1. The client connects to the server.
+2. The server sends an initial prompt: "How many products would you like to see?"
+3. The client responds with a number.
+4. The server spawns a thread to scrape the requested product data.
+5. The thread performs the scraping task and sends the response back to the client.
+6. The client can request more products or exit the session.
 
-## Action Diagram: Interaction Flow
+## How to Run
+1. Start the server:
+   ```bash
+   python server_script.py
+   ```
+2. Connect a client using a simple socket-based client script or a tool like `telnet`:
+   ```bash
+   telnet localhost 65432
+   ```
 
-```text
-Server sends prompt to client: "How many headlines would you like?"
-                |
-                v
-Client responds with number (e.g., 3)
-                |
-                v
-+----------------------------+
-| Server calls scraper       |
-|  - Sends GET request to    |
-|    Cointelegraph           |
-|  - Parses response HTML    |
-|  - Extracts headlines      |
-|  - Formats JSON response   |
-+----------------------------+
-                |
-                v
-Server sends headlines to client
-                |
-                v
-Server prompts: "Would you like to see more? (Enter number or 'exit')"
-                |
-                v
-Client responds with number or "exit"
-                |
-                v
-Process repeats or connection ends.
+## Requirements
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
 ```
 
----
+### `requirements.txt` Content
+```plaintext
+selenium
+webdriver-manager
+```
 
-## Setup
-
-### Step 1: Install Python
-
-1. Ensure Python 3.8 or newer is installed on your computer.
-   - Download Python from [python.org](https://www.python.org/).
-2. Verify the installation:
-   - Open a terminal or command prompt and run:
-     ```bash
-     python --version
-     ```
-
-### Step 2: Download Project Files
-
-Download the following files and place them in the same folder:
-1. `mpr2025_KN_82119_Python_Windows_Server.py` (Server Code)
-2. `mpr2025_KN_82119_Python_Windows_Client.py` (Client Code)
-3. `requirements.txt` (Dependencies)
-4. `mpr2025_KN_82119_Python_Windows_documentation.md` (This Documentation)
-
-### Step 3: Set Up a Virtual Environment
-
-A virtual environment ensures that the project dependencies are isolated from the rest of your system.
-
-1. Open a terminal or command prompt.
-2. Navigate to the folder where the project files are located:
-   ```bash
-   cd path/to/project
-   ```
-3. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   ```
-4. Activate the virtual environment:
-   - **Windows**:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - **Mac/Linux**:
-     ```bash
-     source venv/bin/activate
-     ```
-
-### Step 4: Install Dependencies
-
-1. Use the `requirements.txt` file to install the necessary Python libraries:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Step 5: Run the Server
-
-1. Start the server by running the server script:
-   ```bash
-   python mpr2025_KN_82119_Python_Windows_Server.py
-   ```
-2. The server will start and listen for connections on `localhost:65432`.
-3. You should see output like this:
-   ```
-   Listening on ('localhost', 65432)
-   ```
-
-### Step 6: Run the Client
-
-1. Open a new terminal or command prompt.
-2. Run the client script:
-   ```bash
-   python mpr2025_KN_82119_Python_Windows_Client.py
-   ```
-3. Follow the on-screen instructions:
-   - Enter the number of headlines you want when prompted.
-   - Decide whether to request more or exit the interaction.
-
----
-
-## Notes
-
-1. **Internet Connection**:
-   - The server requires an active internet connection to fetch data from Cointelegraph.
-
-2. **Customization**:
-   - You can modify the scraper to target other sections of Cointelegraph or different websites altogether.
-
+## Future Improvements
+1. **Error Handling**:
+   - Enhance error reporting for client misbehavior and scraping failures.
+2. **Pagination**:
+   - Extend the scraper to handle paginated results automatically.
 3. **Scalability**:
-   - The selector-based server design allows efficient handling of multiple client requests.
+   - Upgrade to a process-based architecture for higher throughput.
 
 ---
