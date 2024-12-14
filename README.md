@@ -2,7 +2,7 @@
 # Project Documentation: Multithreaded Web Scraper and Server
 
 ## Overview
-This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting natural hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
+This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
 
 ## Features
 1. **Web Scraping**:
@@ -94,26 +94,64 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 6. The client can request more products or exit the session.
 
 ## How to Run
+
+## Setup
+
+### Step 1: Install Python
+
+1. Ensure Python 3.8 or newer is installed on your computer.
+   - Download Python from [python.org](https://www.python.org/).
+2. Verify the installation:
+   - Open a terminal or command prompt and run:
+     ```bash
+     python --version
+     ```
+
+### Step 2: Download Project Files
+
+Download the following files and place them in the same folder:
+1. `mpr2025_KN_82119_Python_Windows_Server.py` (Server Code)
+2. `mpr2025_KN_82119_Python_Windows_Client.py` (Client Code)
+3. `requirements.txt` (Dependencies)
+4. `mpr2025_KN_82119_Python_Windows_documentation.md` (This Documentation)
+
+### Step 3: Set Up a Virtual Environment
+
+A virtual environment ensures that the project dependencies are isolated from the rest of your system.
+
+1. Open a terminal or command prompt.
+2. Navigate to the folder where the project files are located:
+   ```bash
+   cd path/to/project
+   ```
+3. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   ```
+4. Activate the virtual environment:
+   ```bash
+   source venv/bin/activate  # On macOS/Linux
+   venv\Scriptsctivate     # On Windows
+   ```
+5. Use the `requirements.txt` file to install the necessary Python libraries:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+### Step 4: Start The Server And Clients
+
 1. Start the server:
    ```bash
-   python server_script.py
+   python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-2. Connect a client using a simple socket-based client script or a tool like `telnet`:
+2. Connect one or more clients using the client script:
+   ```bash
+   python mpr2025_KN_82119_Python_Windows_Client.py
+   ```
+   or alternatively, connect using `telnet`:
    ```bash
    telnet localhost 65432
    ```
-
-## Requirements
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-### `requirements.txt` Content
-```plaintext
-selenium
-webdriver-manager
-```
 
 ## Future Improvements
 1. **Error Handling**:
@@ -122,5 +160,6 @@ webdriver-manager
    - Extend the scraper to handle paginated results automatically.
 3. **Scalability**:
    - Upgrade to a process-based architecture for higher throughput.
-
+4. **Caching**:
+   - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
 ---
