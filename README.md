@@ -2,7 +2,7 @@
 # Project Documentation: Multithreaded Web Scraper and Server
 
 ## Overview
-This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
+This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting natural hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
 
 ## Features
 1. **Web Scraping**:
