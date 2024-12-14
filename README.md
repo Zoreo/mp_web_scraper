@@ -131,7 +131,7 @@ A virtual environment ensures that the project dependencies are isolated from th
 4. Activate the virtual environment:
    ```bash
    source venv/bin/activate  # On macOS/Linux
-   venv\Scriptsctivate     # On Windows
+   venv\Scripts\activate     # On Windows
    ```
 5. Use the `requirements.txt` file to install the necessary Python libraries:
    ```bash
