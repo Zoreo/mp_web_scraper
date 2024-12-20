@@ -1,4 +1,3 @@
-
 # Project Documentation: Multithreaded Web Scraper and Server
 
 ## Overview
@@ -53,6 +52,80 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 3. **Non-Blocking Design**:
    - The main server loop uses `selectors` to monitor sockets and delegate work efficiently.
 
+## Function Details
+
+### **fetch_dm_products**
+**Purpose**:
+Scrapes product data from the DM Drogerie Markt Bulgaria website, including product names and prices, and sorts them by price.
+
+**Inputs**: None
+
+**Outputs**: A list of dictionaries with `name` and `price` keys for each product.
+
+**Logic**:
+1. Navigates to the specified URL.
+2. Waits for the product elements to load.
+3. Extracts and cleans data for product names and prices.
+4. Sorts the products by price in ascending order.
+
+### **handle_client**
+**Purpose**:
+Manages communication with an individual client, including receiving requests, processing data, and sending responses.
+
+**Inputs**:
+- `sock`: The socket object for the client connection.
+- `data`: Data object to track the connection state.
+
+**Outputs**: None (sends responses directly to the client).
+
+**Logic**:
+1. Receives data from the client.
+2. Handles "exit" requests by closing the connection.
+3. Processes numerical requests by calling `fetch_dm_products` and sending the appropriate response.
+
+### **service_connection**
+**Purpose**:
+Handles client connections, delegating processing to threads as needed.
+
+**Inputs**:
+- `key`: Selector key for the connection.
+- `mask`: Event mask for readiness (read/write).
+
+**Outputs**: None (delegates work to `handle_client`).
+
+**Logic**:
+1. Spawns a new thread to handle client requests when data is ready.
+2. Sends initial prompts or responses when write-ready.
+
+### **accept_wrapper**
+**Purpose**:
+Accepts new client connections and initializes their data states.
+
+**Inputs**:
+- `sock`: The listening socket.
+
+**Outputs**: None (registers the new connection).
+
+**Logic**:
+1. Accepts a connection.
+2. Initializes connection data.
+3. Registers the connection with the selector.
+
+### **start_server**
+**Purpose**:
+Starts the multithreaded server and manages the main event loop.
+
+**Inputs**:
+- `host`: Server hostname.
+- `port`: Server port number.
+
+**Outputs**: None (runs the server loop).
+
+**Logic**:
+1. Initializes the server socket.
+2. Registers the socket with the selector.
+3. Continuously processes ready events (accepting connections or handling client data).
+
 ## Diagrams
 
 ### **Architecture Diagram**
@@ -95,73 +168,48 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## How to Run
 
-## Setup
-
-### Step 1: Install Python
-
-1. Ensure Python 3.8 or newer is installed on your computer.
-   - Download Python from [python.org](https://www.python.org/).
-2. Verify the installation:
-   - Open a terminal or command prompt and run:
-     ```bash
-     python --version
-     ```
-
-### Step 2: Download Project Files
-
-Download the following files and place them in the same folder:
-1. `mpr2025_KN_82119_Python_Windows_Server.py` (Server Code)
-2. `mpr2025_KN_82119_Python_Windows_Client.py` (Client Code)
-3. `requirements.txt` (Dependencies)
-4. `mpr2025_KN_82119_Python_Windows_documentation.md` (This Documentation)
-
-### Step 3: Set Up a Virtual Environment
-
-A virtual environment ensures that the project dependencies are isolated from the rest of your system.
-
-1. Open a terminal or command prompt.
-2. Navigate to the folder where the project files are located:
-   ```bash
-   cd path/to/project
-   ```
-3. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   ```
-4. Activate the virtual environment:
+### Using Python
+1. Activate the virtual environment:
    ```bash
    source venv/bin/activate  # On macOS/Linux
    venv\Scripts\activate     # On Windows
    ```
-5. Use the `requirements.txt` file to install the necessary Python libraries:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   
-### Step 4: Start The Server And Clients
-
-1. Start the server:
+2. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-2. Connect one or more clients using the client script:
+3. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
-      or alternatively, connect using `telnet`:
-      ```bash
-      telnet localhost 65432
-      ```
-3. Follow the on-screen instructions:
-   - Enter the number of headlines you want when prompted.
-   - Decide whether to request more or exit the interaction.
 
+### Using Telnet (Optional)
+Alternatively, connect using `telnet`:
+```bash
+telnet localhost 65432
+```
+
+## Requirements
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### `requirements.txt` Content
+```plaintext
+selenium
+webdriver-manager
+```
 
 ## Future Improvements
-1. **Caching**:
-   - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
+1. **Error Handling**:
+   - Enhance error reporting for client misbehavior and scraping failures.
 2. **Pagination**:
    - Extend the scraper to handle paginated results automatically.
 3. **Scalability**:
    - Upgrade to a process-based architecture for higher throughput.
+4. **Caching**:
+   - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
+
 ---
+
