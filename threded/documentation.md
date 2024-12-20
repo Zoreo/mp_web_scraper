@@ -56,50 +56,33 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## Server Functions
 
+## Server Functions
+
 ### **`main()`**
-This is the entry point for the server application. It initializes the server, sets up socket listeners, and starts the main event loop.
+Initializes and starts the server application.
 
 ### **`start_server(host, port)`**
-- **Description**: Initializes and starts the server on the specified host and port. Registers the listening socket with the `selectors` module.
-- **Inputs**: `host` (string), `port` (integer).
-- **Outputs**: None.
+Starts the server on the specified host and port, registering it with selectors.
 
 ### **`accept_wrapper(sock)`**
-- **Description**: Accepts incoming client connections, configures their sockets for non-blocking mode, and registers them with the selector.
-- **Inputs**: `sock` (socket object).
-- **Outputs**: None.
+Accepts client connections and registers them for communication.
 
 ### **`service_connection(key, mask)`**
-- **Description**: Handles active client connections. Reads data from the client, spawns threads for blocking operations (like web scraping), and sends responses.
-- **Inputs**: `key` (selector key), `mask` (event mask).
-- **Outputs**: None.
+Handles client connections and spawns threads for requests.
 
 ### **`handle_client(sock, data)`**
-- **Description**: Processes client requests, including validating input, invoking the scraper, and sending responses back to the client.
-- **Inputs**: `sock` (client socket), `data` (connection-specific data).
-- **Outputs**: None.
+Processes client requests and sends responses.
 
 ### **`fetch_dm_products()`**
-- **Description**: Scrapes the DM Drogerie Markt website for product names and prices, sorts the results by price, and returns the processed data.
-- **Inputs**: None.
-- **Outputs**: List of dictionaries containing product names and prices.
+Scrapes the DM Drogerie Markt website and returns sorted product data.
 
 ## Client Functions
 
 ### **`main()`**
-- **Description**: Entry point for the client application. Manages the connection to the server and user interactions.
-- **Inputs**: None.
-- **Outputs**: None.
-
-### **`clear_terminal()`**
-- **Description**: Clears the terminal screen to enhance user experience with a clean interface.
-- **Inputs**: None.
-- **Outputs**: None.
+Connects to the server and manages user interactions.
 
 ### **`client_handler(sock)`**
-- **Description**: Facilitates communication with the server. Sends user requests and displays server responses.
-- **Inputs**: `sock` (socket object).
-- **Outputs**: None.
+Facilitates communication with the server. Sends user requests and displays server responses.
 
 ## Diagrams
 
@@ -191,15 +174,15 @@ The diagrams provide an architectural overview of the server and its multithread
        |       |
   +----+       +----+
   |                 |
-+------+       +------+
++-------+       +-------+
 | Thread|       | Thread|
 |  1    |       |  2    |
-+------+       +------+
++-------+       +-------+
    |                |
-+------+        +------+
++--------+      +--------+
 |Scraping|      |Scraping|
 | Logic  |      | Logic  |
-+------+        +------+
++--------+      +--------+
 ```
 
 ## How to Run
@@ -208,17 +191,17 @@ The diagrams provide an architectural overview of the server and its multithread
 1. Activate the virtual environment:
    ```bash
    source venv/bin/activate  # On macOS/Linux
-   venv\Scriptsctivate     # On Windows
+   venv\Scripts\Activate     # On Windows
    ```
 2. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
-   ```  
+   ``` 
 3. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-3. Connect a client using the client script:
+4. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
