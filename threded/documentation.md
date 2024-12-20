@@ -1,4 +1,3 @@
-
 # Project Documentation: Multithreaded Web Scraper
 
 ## Table of Contents
