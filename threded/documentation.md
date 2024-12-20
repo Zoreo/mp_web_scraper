@@ -1,5 +1,5 @@
 
-# Project Documentation: Multithreaded Web Scraper and Server
+# Project Documentation: Multithreaded Web Scraper
 
 ## Table of Contents
 - [Overview](#overview)
