@@ -147,15 +147,15 @@ Starts the multithreaded server and manages the main event loop.
        |       |
   +----+       +----+
   |                 |
-+------+       +------+
++-------+       +-------+
 | Thread|       | Thread|
 |  1    |       |  2    |
-+------+       +------+
++-------+       +-------+
    |                |
-+------+        +------+
++--------+      +--------+
 |Scraping|      |Scraping|
 | Logic  |      | Logic  |
-+------+        +------+
++--------+      +--------+
 ```
 
 ### **Action Flow**
@@ -174,11 +174,18 @@ Starts the multithreaded server and manages the main event loop.
    source venv/bin/activate  # On macOS/Linux
    venv\Scripts\activate     # On Windows
    ```
-2. Start the server:
+
+2. Activate the virtual environment:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+3. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-3. Connect a client using the client script:
+   
+4. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
@@ -189,16 +196,10 @@ Alternatively, connect using `telnet`:
 telnet localhost 65432
 ```
 
-## Requirements
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
-
 ### `requirements.txt` Content
 ```plaintext
-selenium
-webdriver-manager
+selenium==4.15.0
+webdriver-manager==3.8.6
 ```
 
 ## Future Improvements
