@@ -42,6 +42,9 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## Server Functions
 
+### **`main()`**
+initializes the application and starts the server on localhost at port 65432.
+
 ### **`start_server(host, port)`**
 Starts the server on the specified host and port, registering it with selectors.
 
