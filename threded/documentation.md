@@ -58,9 +58,6 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## Server Functions
 
-### **`main()`**
-Initializes and starts the server application.
-
 ### **`start_server(host, port)`**
 Starts the server on the specified host and port, registering it with selectors.
 
@@ -80,9 +77,6 @@ Scrapes the DM Drogerie Markt website and returns sorted product data.
 
 ### **`main()`**
 Connects to the server and manages user interactions.
-
-### **`client_handler(sock)`**
-Facilitates communication with the server. Sends user requests and displays server responses.
 
 ## Diagrams
 
