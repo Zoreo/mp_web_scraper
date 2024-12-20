@@ -183,11 +183,11 @@ The diagrams provide an architectural overview of the server and its multithread
    ``` 
 3. Start the server:
    ```bash
-   python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
+   python server.py
    ```
 4. Connect a client using the client script:
    ```bash
-   python mpr2025_KN_82119_Python_Windows_Client.py
+   python client.py
    ```
 
 ### Using Telnet (Optional)
