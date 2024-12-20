@@ -1,4 +1,19 @@
+
 # Project Documentation: Multithreaded Web Scraper and Server
+
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Implementation Details](#implementation-details)
+  - [Web Scraping](#web-scraping)
+  - [Selectors](#selectors)
+  - [Multithreading](#multithreading)
+  - [Server Functions](#server-functions)
+  - [Client Functions](#client-functions)
+- [Diagrams](#diagrams)
+- [How to Run](#how-to-run)
+- [Requirements](#requirements)
+- [Future Improvements](#future-improvements)
 
 ## Overview
 This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module.
@@ -40,95 +55,42 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
   - Selenium operations are inherently blocking. Without multithreading, the server would handle only one client at a time.
   - By delegating blocking tasks to threads, the server loop remains free to handle other client connections, improving responsiveness and scalability.
 
-### **Server Architecture**
-1. **Connection Management**:
-   - The `selectors` module monitors multiple sockets for readiness (read/write).
-   - The `accept_wrapper` function accepts new connections and registers them.
+### Server Functions
+- **`main()`**
+  - Initializes and starts the server.
+- **`start_server(host, port)`**
+  - Starts the multithreaded server on the specified host and port.
+  - **Inputs**: `host` (string), `port` (integer).
+  - **Outputs**: None.
+- **`accept_wrapper(sock)`**
+  - Accepts new client connections and registers them with the selector.
+  - **Inputs**: `sock` (socket object).
+  - **Outputs**: None.
+- **`service_connection(key, mask)`**
+  - Handles active client connections and spawns threads for blocking operations.
+  - **Inputs**: `key` (selector key), `mask` (event mask).
+  - **Outputs**: None.
+- **`handle_client(sock, data)`**
+  - Processes client requests, fetches data, and sends responses.
+  - **Inputs**: `sock` (client socket), `data` (connection-specific data).
+  - **Outputs**: None.
+- **`fetch_dm_products()`**
+  - Scrapes product names and prices from the specified website and sorts them by price.
+  - **Inputs**: None.
+  - **Outputs**: List of dictionaries containing product names and prices.
 
-2. **Client Handling**:
-   - Each client connection spawns a new thread for processing its requests.
-   - The `handle_client` function handles communication with individual clients.
-
-3. **Non-Blocking Design**:
-   - The main server loop uses `selectors` to monitor sockets and delegate work efficiently.
-
-## Function Details
-
-### **fetch_dm_products**
-**Purpose**:
-Scrapes product data from the DM Drogerie Markt Bulgaria website, including product names and prices, and sorts them by price.
-
-**Inputs**: None
-
-**Outputs**: A list of dictionaries with `name` and `price` keys for each product.
-
-**Logic**:
-1. Navigates to the specified URL.
-2. Waits for the product elements to load.
-3. Extracts and cleans data for product names and prices.
-4. Sorts the products by price in ascending order.
-
-### **handle_client**
-**Purpose**:
-Manages communication with an individual client, including receiving requests, processing data, and sending responses.
-
-**Inputs**:
-- `sock`: The socket object for the client connection.
-- `data`: Data object to track the connection state.
-
-**Outputs**: None (sends responses directly to the client).
-
-**Logic**:
-1. Receives data from the client.
-2. Handles "exit" requests by closing the connection.
-3. Processes numerical requests by calling `fetch_dm_products` and sending the appropriate response.
-
-### **service_connection**
-**Purpose**:
-Handles client connections, delegating processing to threads as needed.
-
-**Inputs**:
-- `key`: Selector key for the connection.
-- `mask`: Event mask for readiness (read/write).
-
-**Outputs**: None (delegates work to `handle_client`).
-
-**Logic**:
-1. Spawns a new thread to handle client requests when data is ready.
-2. Sends initial prompts or responses when write-ready.
-
-### **accept_wrapper**
-**Purpose**:
-Accepts new client connections and initializes their data states.
-
-**Inputs**:
-- `sock`: The listening socket.
-
-**Outputs**: None (registers the new connection).
-
-**Logic**:
-1. Accepts a connection.
-2. Initializes connection data.
-3. Registers the connection with the selector.
-
-### **start_server**
-**Purpose**:
-Starts the multithreaded server and manages the main event loop.
-
-**Inputs**:
-- `host`: Server hostname.
-- `port`: Server port number.
-
-**Outputs**: None (runs the server loop).
-
-**Logic**:
-1. Initializes the server socket.
-2. Registers the socket with the selector.
-3. Continuously processes ready events (accepting connections or handling client data).
+### Client Functions
+- **`main()`**
+  - Handles client-side operations, including connecting to the server and managing input/output.
+- **`clear_terminal()`**
+  - Clears the terminal screen for a clean user interface.
+- **`client_handler(sock)`**
+  - Manages communication with the server, including sending and receiving messages.
 
 ## Diagrams
+The diagrams provide an architectural overview of the server and its multithreaded capabilities, as well as the client-server interaction flow.
 
-### **Architecture Diagram**
+### Architecture Diagram
 ```plaintext
 +----------------------+
 |      Client 1        |
@@ -147,24 +109,16 @@ Starts the multithreaded server and manages the main event loop.
        |       |
   +----+       +----+
   |                 |
-+-------+       +-------+
++------+       +------+
 | Thread|       | Thread|
 |  1    |       |  2    |
-+-------+       +-------+
++------+       +------+
    |                |
-+--------+      +--------+
++------+        +------+
 |Scraping|      |Scraping|
 | Logic  |      | Logic  |
-+--------+      +--------+
++------+        +------+
 ```
-
-### **Action Flow**
-1. The client connects to the server.
-2. The server sends an initial prompt: "How many products would you like to see?"
-3. The client responds with a number.
-4. The server spawns a thread to scrape the requested product data.
-5. The thread performs the scraping task and sends the response back to the client.
-6. The client can request more products or exit the session.
 
 ## How to Run
 
@@ -172,20 +126,13 @@ Starts the multithreaded server and manages the main event loop.
 1. Activate the virtual environment:
    ```bash
    source venv/bin/activate  # On macOS/Linux
-   venv\Scripts\activate     # On Windows
+   venv\Scriptsctivate     # On Windows
    ```
-
-2. Activate the virtual environment:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   
-3. Start the server:
+2. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-   
-4. Connect a client using the client script:
+3. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
@@ -194,6 +141,12 @@ Starts the multithreaded server and manages the main event loop.
 Alternatively, connect using `telnet`:
 ```bash
 telnet localhost 65432
+```
+
+## Requirements
+Install the required dependencies:
+```bash
+pip install -r requirements.txt
 ```
 
 ### `requirements.txt` Content
@@ -213,4 +166,3 @@ webdriver-manager==3.8.6
    - Implement caching to reduce redundant requests and improve response times for frequently accessed data.
 
 ---
-
