@@ -13,7 +13,7 @@
 - [Future Improvements](#future-improvements)
 
 ## Overview
-This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting natural hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module. We use Selenium over BeautifulSoup and similar libraries because Selenium can handle dynamic, JavaScript-rendered content, which is essential for scraping most modern websites that rely on JavaScript to load product data. 
+This project is a multithreaded web scraping server implemented in Python. It allows clients to request product information from the DM Drogerie Markt Bulgaria website, specifically targeting natural hair care products. The server processes multiple client requests concurrently using multithreading and an event-driven architecture with the `selectors` module. We use Selenium over BeautifulSoup and similar libraries because Selenium can handle dynamic, JavaScript-rendered content, which is essential for scraping most modern websites that rely on JavaScript to load product data.
 
 ## Implementation Details
 
@@ -54,6 +54,9 @@ Handles client connections and spawns threads for requests.
 
 ### **`handle_client(sock, data)`**
 Processes client requests and sends responses.
+
+### **`clean_up_socket(sock, data)`**
+Unregisters and closes the client socket to release resources after the connection ends.
 
 ### **`fetch_dm_products()`**
 Scrapes the DM Drogerie Markt website and returns sorted product data.
