@@ -8,7 +8,7 @@
   - [Selectors](#selectors)
   - [Server Functions](#server-functions)
   - [Client Functions](#client-functions)
-- [Diagrams](#diagrams)
+  - [Diagram](#diagram)
 - [How to Run](#how-to-run)
 - [Future Improvements](#future-improvements)
 
@@ -18,12 +18,12 @@ This project is a multithreaded web scraping server implemented in Python. It al
 ## Implementation Details
 
 ### **Web Scraping**
-The `fetch_dm_products` function uses Selenium to automate the scraping process. Key steps include:
-1. Navigating to the target URL.
-2. Waiting for the product list to load using `WebDriverWait`.
-3. Extracting product names and prices using CSS selectors.
-4. Cleaning and processing the extracted data.
-5. Sorting the products by price.
+The `fetch_dm_products` function uses Selenium to automate the scraping process that:
+1. Navigates to the target URL.
+2. Waits for the product list to load using `WebDriverWait`.
+3. Extracts product names and prices using CSS selectors.
+4. Cleans and processes the extracted data.
+5. Sorts the products by price.
 
 ### **Multithreading**
 - The server uses the `selectors` module for event-driven, non-blocking I/O.
@@ -41,7 +41,7 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## Server Functions
 ### **`main()`**
-initializes the application and starts the server on localhost at port 65432.
+initializes the application and starts the server on localhost at port 65432 (runs start_server('localhost', 65432)).
 
 ### **`start_server(host, port)`**
 Starts the server on the specified host and port, registering it with selectors.
@@ -52,11 +52,11 @@ Accepts client connections and registers them for communication.
 ### **`service_connection(key, mask)`**
 Handles client connections and spawns threads for requests.
 
-### **`handle_client(sock, data)`**
-Processes client requests and sends responses.
-
 ### **`clean_up_socket(sock, data)`**
 Unregisters and closes the client socket to release resources after the connection ends.
+
+### **`handle_client(sock, data)`**
+Processes client requests and sends responses.
 
 ### **`fetch_dm_products()`**
 Scrapes the DM Drogerie Markt website and returns sorted product data.
@@ -64,92 +64,21 @@ Scrapes the DM Drogerie Markt website and returns sorted product data.
 ## Client Functions
 
 ### **`main()`**
-Connects to the server and manages user interactions.
+Connects to the server and manages user interactions (runs start_client(host, port)).
 
 ### **`start_client(host, port)`**
 Facilitates communication with the server, processes server responses    
 
-## Diagrams
+## Diagram
 
-### Function Interaction Diagram
-
-```plaintext
-+----------------------------+
-|         Server             |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|       start_server         |
-|   Initializes the server   |
-|   and listens for clients  |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|      accept_wrapper        |
-| Accepts incoming client    |
-| connections and registers  |
-| them with selectors        |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|    service_connection      |
-| Handles I/O readiness and  |
-| spawns threads to handle   |
-| client requests            |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|       handle_client        |
-| Reads client input, calls  |
-| fetch_dm_products for      |
-| data, and sends responses  |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|      fetch_dm_products     |
-| Scrapes product data from  |
-| the website using Selenium |
-| and returns sorted results |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|          Client            |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|           main             |
-| Connects to server, sends  |
-| input, and handles output  |
-+----------------------------+
-             |
-             v
-+----------------------------+
-|        start_client        |
-| Facilitates communication  |
-| with the server, processes |
-| server responses           |
-+----------------------------+
-```
-
-The diagrams provide an architectural overview of the server and its multithreaded capabilities, as well as the client-server interaction flow.
+The diagram provide an architectural overview of the server and its multithreaded capabilities, as well as the client-server interaction flow.
 
 ### Architecture Diagram
 ```plaintext
-+----------------------+
-|      Client 1        |
-+----------------------+
-          |
-+----------------------+
-|      Client 2,3,..   |
-+----------------------+
-          |
++------------+ +-------------------+
+|  Client 1  | |  Client 2, 3,...  |
++------------+ +-------------------+
+      |            |
 +----------------------+
 |   Multithreaded      |
 |   Server             |
@@ -173,10 +102,11 @@ The diagrams provide an architectural overview of the server and its multithread
 ## How to Run
 
 ### Using Python
-1. Activate the virtual environment:
+1. Activate the virtual environment, assuming you have Python and pip installed:
    ```bash
-   source venv/bin/activate  # On macOS/Linux
-   venv\Scripts\Activate     # On Windows
+   python -m venv venv       # Create the virtual enviornment
+   source venv/bin/activate  # Activate on macOS/Linux
+   venv\Scripts\Activate     # Activate on Windows
    ```
 2. Install the required dependencies:
    ```bash
@@ -186,7 +116,7 @@ The diagrams provide an architectural overview of the server and its multithread
    ```bash
    python server.py
    ```
-4. Connect a client using the client script:
+4. Connect clients using the client script:
    ```bash
    python client.py
    ```
