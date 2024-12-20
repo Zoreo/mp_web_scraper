@@ -19,7 +19,7 @@ This project is a multithreaded web scraping server implemented in Python. It al
 
 ## Features
 1. **Web Scraping**:
-   - Scrapes product names and prices from the specified URL using Selenium.
+   - Scrapes product names and prices from the DM Drogerie Markt Bulgaria.
    - Extracts and sorts products by price in ascending order.
    
 2. **Multithreaded Server**:
@@ -56,8 +56,6 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
 
 ## Server Functions
 
-## Server Functions
-
 ### **`start_server(host, port)`**
 Starts the server on the specified host and port, registering it with selectors.
 
@@ -77,6 +75,9 @@ Scrapes the DM Drogerie Markt website and returns sorted product data.
 
 ### **`main()`**
 Connects to the server and manages user interactions.
+
+### **`start_client(host, port)`**
+Facilitates communication with the server, processes server responses    
 
 ## Diagrams
 
@@ -140,7 +141,7 @@ Connects to the server and manages user interactions.
              |
              v
 +----------------------------+
-|      client_handler        |
+|        start_client        |
 | Facilitates communication  |
 | with the server, processes |
 | server responses           |
