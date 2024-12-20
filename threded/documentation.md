@@ -12,7 +12,6 @@
   - [Client Functions](#client-functions)
 - [Diagrams](#diagrams)
 - [How to Run](#how-to-run)
-- [Requirements](#requirements)
 - [Future Improvements](#future-improvements)
 
 ## Overview
@@ -109,15 +108,15 @@ The diagrams provide an architectural overview of the server and its multithread
        |       |
   +----+       +----+
   |                 |
-+------+       +------+
++-------+       +-------+
 | Thread|       | Thread|
 |  1    |       |  2    |
-+------+       +------+
++-------+       +-------+
    |                |
-+------+        +------+
++--------+      +--------+
 |Scraping|      |Scraping|
 | Logic  |      | Logic  |
-+------+        +------+
++--------+      +--------+
 ```
 
 ## How to Run
@@ -128,11 +127,15 @@ The diagrams provide an architectural overview of the server and its multithread
    source venv/bin/activate  # On macOS/Linux
    venv\Scriptsctivate     # On Windows
    ```
-2. Start the server:
+2. Install the requirements:
+   ```bash
+    pip install -r requirements.txt
+    ```
+3. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-3. Connect a client using the client script:
+4. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
@@ -141,18 +144,6 @@ The diagrams provide an architectural overview of the server and its multithread
 Alternatively, connect using `telnet`:
 ```bash
 telnet localhost 65432
-```
-
-## Requirements
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-### `requirements.txt` Content
-```plaintext
-selenium==4.15.0
-webdriver-manager==3.8.6
 ```
 
 ## Future Improvements
