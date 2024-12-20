@@ -54,39 +54,122 @@ The `fetch_dm_products` function uses Selenium to automate the scraping process.
   - Selenium operations are inherently blocking. Without multithreading, the server would handle only one client at a time.
   - By delegating blocking tasks to threads, the server loop remains free to handle other client connections, improving responsiveness and scalability.
 
-### Server Functions
-- **`main()`**
-  - Initializes and starts the server.
-- **`start_server(host, port)`**
-  - Starts the multithreaded server on the specified host and port.
-  - **Inputs**: `host` (string), `port` (integer).
-  - **Outputs**: None.
-- **`accept_wrapper(sock)`**
-  - Accepts new client connections and registers them with the selector.
-  - **Inputs**: `sock` (socket object).
-  - **Outputs**: None.
-- **`service_connection(key, mask)`**
-  - Handles active client connections and spawns threads for blocking operations.
-  - **Inputs**: `key` (selector key), `mask` (event mask).
-  - **Outputs**: None.
-- **`handle_client(sock, data)`**
-  - Processes client requests, fetches data, and sends responses.
-  - **Inputs**: `sock` (client socket), `data` (connection-specific data).
-  - **Outputs**: None.
-- **`fetch_dm_products()`**
-  - Scrapes product names and prices from the specified website and sorts them by price.
-  - **Inputs**: None.
-  - **Outputs**: List of dictionaries containing product names and prices.
+## Server Functions
 
-### Client Functions
-- **`main()`**
-  - Handles client-side operations, including connecting to the server and managing input/output.
-- **`clear_terminal()`**
-  - Clears the terminal screen for a clean user interface.
-- **`client_handler(sock)`**
-  - Manages communication with the server, including sending and receiving messages.
+### **`main()`**
+This is the entry point for the server application. It initializes the server, sets up socket listeners, and starts the main event loop.
+
+### **`start_server(host, port)`**
+- **Description**: Initializes and starts the server on the specified host and port. Registers the listening socket with the `selectors` module.
+- **Inputs**: `host` (string), `port` (integer).
+- **Outputs**: None.
+
+### **`accept_wrapper(sock)`**
+- **Description**: Accepts incoming client connections, configures their sockets for non-blocking mode, and registers them with the selector.
+- **Inputs**: `sock` (socket object).
+- **Outputs**: None.
+
+### **`service_connection(key, mask)`**
+- **Description**: Handles active client connections. Reads data from the client, spawns threads for blocking operations (like web scraping), and sends responses.
+- **Inputs**: `key` (selector key), `mask` (event mask).
+- **Outputs**: None.
+
+### **`handle_client(sock, data)`**
+- **Description**: Processes client requests, including validating input, invoking the scraper, and sending responses back to the client.
+- **Inputs**: `sock` (client socket), `data` (connection-specific data).
+- **Outputs**: None.
+
+### **`fetch_dm_products()`**
+- **Description**: Scrapes the DM Drogerie Markt website for product names and prices, sorts the results by price, and returns the processed data.
+- **Inputs**: None.
+- **Outputs**: List of dictionaries containing product names and prices.
+
+## Client Functions
+
+### **`main()`**
+- **Description**: Entry point for the client application. Manages the connection to the server and user interactions.
+- **Inputs**: None.
+- **Outputs**: None.
+
+### **`clear_terminal()`**
+- **Description**: Clears the terminal screen to enhance user experience with a clean interface.
+- **Inputs**: None.
+- **Outputs**: None.
+
+### **`client_handler(sock)`**
+- **Description**: Facilitates communication with the server. Sends user requests and displays server responses.
+- **Inputs**: `sock` (socket object).
+- **Outputs**: None.
 
 ## Diagrams
+
+### Function Interaction Diagram
+
+```plaintext
++----------------------------+
+|         Server             |
++----------------------------+
+             |
+             v
++----------------------------+
+|       start_server         |
+|   Initializes the server   |
+|   and listens for clients  |
++----------------------------+
+             |
+             v
++----------------------------+
+|      accept_wrapper        |
+| Accepts incoming client    |
+| connections and registers  |
+| them with selectors        |
++----------------------------+
+             |
+             v
++----------------------------+
+|    service_connection      |
+| Handles I/O readiness and  |
+| spawns threads to handle   |
+| client requests            |
++----------------------------+
+             |
+             v
++----------------------------+
+|       handle_client        |
+| Reads client input, calls  |
+| fetch_dm_products for      |
+| data, and sends responses  |
++----------------------------+
+             |
+             v
++----------------------------+
+|      fetch_dm_products     |
+| Scrapes product data from  |
+| the website using Selenium |
+| and returns sorted results |
++----------------------------+
+             |
+             v
++----------------------------+
+|          Client            |
++----------------------------+
+             |
+             v
++----------------------------+
+|           main             |
+| Connects to server, sends  |
+| input, and handles output  |
++----------------------------+
+             |
+             v
++----------------------------+
+|      client_handler        |
+| Facilitates communication  |
+| with the server, processes |
+| server responses           |
++----------------------------+
+```
+
 The diagrams provide an architectural overview of the server and its multithreaded capabilities, as well as the client-server interaction flow.
 
 ### Architecture Diagram
@@ -108,15 +191,15 @@ The diagrams provide an architectural overview of the server and its multithread
        |       |
   +----+       +----+
   |                 |
-+-------+       +-------+
++------+       +------+
 | Thread|       | Thread|
 |  1    |       |  2    |
-+-------+       +-------+
++------+       +------+
    |                |
-+--------+      +--------+
++------+        +------+
 |Scraping|      |Scraping|
 | Logic  |      | Logic  |
-+--------+      +--------+
++------+        +------+
 ```
 
 ## How to Run
@@ -127,15 +210,15 @@ The diagrams provide an architectural overview of the server and its multithread
    source venv/bin/activate  # On macOS/Linux
    venv\Scriptsctivate     # On Windows
    ```
-2. Install the requirements:
+2. Install the required dependencies:
    ```bash
-    pip install -r requirements.txt
-    ```
+   pip install -r requirements.txt
+   ```  
 3. Start the server:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Server_Multithreading.py
    ```
-4. Connect a client using the client script:
+3. Connect a client using the client script:
    ```bash
    python mpr2025_KN_82119_Python_Windows_Client.py
    ```
